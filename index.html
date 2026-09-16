@@ -132,28 +132,27 @@ function getData() {
 function buildSignature(d) {
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
-  // 链接统一颜色（与姓名同色）
   const linkStyle = 'color:#1a5f5a; text-decoration:underline;';
 
+  // 【修改点】基础字号从 12px 降为 11px，姓名字号从 14px 降为 13px
   return `
-<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:12px; color:#000000; line-height:1.5; max-width: 450px;">
-  <div style="margin-bottom: 16px; font-size: 12px;">${d.greeting}</div>
+<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:11px; color:#000000; line-height:1.5; max-width: 480px;">
+  <div style="margin-bottom: 16px; font-size: 11px;">${d.greeting}</div>
   
-  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 450px;">
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 480px;">
     <tr>
       <td style="padding-right:16px; vertical-align:top; width: 100px;">
         <img src="${d.logoUrl}" alt="HITI" width="100"
              style="display:block; border:0; max-width:100px;">
       </td>
       
-      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:16px; width: 300px; word-break: break-word;">
+      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:16px; width: 340px; word-break: break-word;">
         
-        <div style="font-size:14px; font-weight:bold; color:#1a5f5a; margin-bottom: 4px;">
+        <div style="font-size:13px; font-weight:bold; color:#1a5f5a; margin-bottom: 4px;">
           ${d.nameCn} ${d.nameEn}
         </div>
         
-        <!-- 1. 职位与 Mobile 之间增加半行间距（从14px增加到24px） -->
-        <div style="font-weight:bold; font-size:12px; margin-bottom: 24px;">
+        <div style="font-weight:bold; font-size:11px; margin-bottom: 24px;">
           ${d.title}
         </div>
         
@@ -161,20 +160,17 @@ function buildSignature(d) {
           <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
         </div>
         
-        <!-- 2. Email 与公司名之间增加半行间距（从14px增加到24px）；3. 链接颜色改为姓名同款墨绿色 -->
         <div style="margin-bottom: 24px;">
           <span style="font-weight:bold;">Email :</span> 
           <a href="mailto:${emailLink}" style="${linkStyle}">${d.email}</a>
         </div>
         
         <div style="margin-bottom: 2px;">${d.companyCn}</div>
-        <!-- 4. 公司名与地址间去掉空行（从14px缩小到2px） -->
         <div style="margin-bottom: 2px;">${d.companyEn}</div>
         
         <div style="margin-bottom: 2px;">${d.addrCn}</div>
         <div style="margin-bottom: 14px;">${d.addrEn}</div>
         
-        <!-- 3. 网址链接颜色改为姓名同款墨绿色 -->
         <div>
           <a href="${webLink}" style="${linkStyle}">${d.website}</a>
         </div>
