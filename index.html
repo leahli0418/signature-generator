@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DNC邮箱签名生成器</title>
+<title>邮箱签名生成器</title>
 <style>
   body { margin:0; padding:24px; background:#f5f5f5;
          font-family:"Microsoft YaHei",Arial,sans-serif; color:#333; }
@@ -42,7 +42,7 @@
     <h2>1. 填写信息</h2>
     <div class="form">
       <div class="field">
-        <label>敬语（可选）</label>
+        <label>称呼（可选）</label>
         <input id="greeting" value="Best Regards," placeholder="如：Best Regards,">
       </div>
       <div class="field">
@@ -128,48 +128,48 @@ function getData() {
   return d;
 }
 
-// ========== 生成签名 HTML 模板（一比一复刻目标格式） ==========
+// ========== 生成签名 HTML 模板（整体缩小两号） ==========
 function buildSignature(d) {
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
 
-  // 目标图的关键：字体13px，行高1.5，区块间用 16px 的空白隔开，链接颜色 0000EE
+  // 基础字号 11px（缩小两号），行高 1.4，间距缩为 12px 和 3px
   return `
-<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:13px; color:#000000; line-height:1.5; max-width: 480px;">
-  <div style="margin-bottom: 16px;">${d.greeting}</div>
+<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:11px; color:#000000; line-height:1.4; max-width: 440px;">
+  <div style="margin-bottom: 12px; font-size: 11px;">${d.greeting}</div>
   
-  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 480px;">
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 440px;">
     <tr>
-      <!-- Logo 宽度 100px -->
-      <td style="padding-right:16px; vertical-align:top; width: 100px;">
-        <img src="${d.logoUrl}" alt="HITI" width="100"
-             style="display:block; border:0; max-width:100px;">
+      <!-- Logo 缩小到 90px -->
+      <td style="padding-right:12px; vertical-align:top; width: 90px;">
+        <img src="${d.logoUrl}" alt="HITI" width="90"
+             style="display:block; border:0; max-width:90px;">
       </td>
       
-      <!-- 右侧信息，宽度锁死 340px，精准控制换行 -->
-      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:16px; width: 340px; word-break: break-word;">
+      <!-- 右侧信息，宽度锁死 320px -->
+      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:12px; width: 320px; word-break: break-word;">
         
-        <div style="font-size:15px; font-weight:bold; color:#1a5f5a; margin-bottom: 4px;">
+        <div style="font-size:13px; font-weight:bold; color:#1a5f5a; margin-bottom: 3px;">
           ${d.nameCn} ${d.nameEn}
         </div>
         
-        <div style="font-weight:bold; font-size:13px; margin-bottom: 16px;">
+        <div style="font-weight:bold; font-size:11px; margin-bottom: 12px;">
           ${d.title}
         </div>
         
-        <div style="margin-bottom: 4px;">
+        <div style="margin-bottom: 3px;">
           <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
         </div>
-        <div style="margin-bottom: 16px;">
+        <div style="margin-bottom: 12px;">
           <span style="font-weight:bold;">Email :</span> 
           <a href="mailto:${emailLink}" style="color:#0000EE; text-decoration:underline;">${d.email}</a>
         </div>
         
-        <div style="margin-bottom: 4px;">${d.companyCn}</div>
-        <div style="margin-bottom: 16px;">${d.companyEn}</div>
+        <div style="margin-bottom: 3px;">${d.companyCn}</div>
+        <div style="margin-bottom: 12px;">${d.companyEn}</div>
         
-        <div style="margin-bottom: 4px;">${d.addrCn}</div>
-        <div style="margin-bottom: 16px;">${d.addrEn}</div>
+        <div style="margin-bottom: 3px;">${d.addrCn}</div>
+        <div style="margin-bottom: 12px;">${d.addrEn}</div>
         
         <div>
           <a href="${webLink}" style="color:#0000EE; text-decoration:underline;">${d.website}</a>
