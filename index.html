@@ -83,7 +83,8 @@
       </div>
       <div class="field">
         <label>Logo 图片 URL</label>
-        <input id="logoUrl" value="https://via.placeholder.com/150x60?text=HITI" placeholder="粘贴你公司Logo的图片链接">
+        <!-- ⚠️ 这里已经替换成了你提供的真实链接 -->
+        <input id="logoUrl" value="https://raw.githubusercontent.com/leahli0418/signature-generator/main/Vizitka_HITI_logo-01.png" placeholder="粘贴你公司Logo的图片链接">
         <button id="btnDownloadLogo">⬇️ 下载此 Logo</button>
       </div>
     </div>
@@ -108,7 +109,7 @@
     <ol class="steps" style="margin-top:12px;">
       <li>打开 PC 端企业邮箱，进入「邮件设置」→「写邮件」→「管理签名样式」</li>
       <li>点击「创建签名」→「更多」→「编辑 HTML 源码」</li>
-      <li>粘贴复制的代码，然后选中签名中的占位图片，通过「插入图片」上传真实 logo</li>
+      <li>粘贴复制的代码，然后选中签名中的图片，通过「插入图片」上传真实 logo</li>
       <li>保存并设为使用中的签名</li>
     </ol>
   </div>
@@ -129,7 +130,6 @@ function buildSignature(d) {
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
 
-  // 核心修改：右侧单元格加了 width: 400px 和 word-break: break-word;
   return `
 <table cellpadding="0" cellspacing="0" border="0"
        style="font-family:Arial,'Microsoft YaHei',sans-serif;
@@ -236,7 +236,7 @@ document.getElementById('btnDownloadLogo').addEventListener('click', async () =>
 
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = '公司Logo.png';
+        a.download = 'Vizitka_HITI_logo-01.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
