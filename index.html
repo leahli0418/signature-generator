@@ -17,10 +17,18 @@
   .field label { font-size:12px; color:#666; }
   .field input { width:220px; padding:6px 8px; border:1px solid #ccc;
                  border-radius:4px; font-size:14px; box-sizing:border-box; }
-  #btnCopy { padding:8px 22px; font-size:14px; background:#1a73e8; color:#fff;
-             border:0; border-radius:4px; cursor:pointer; margin-top:12px; }
-  #btnCopy:hover { background:#1667cf; }
-  #btnCopy.done { background:#2e9e44; }
+  .field button { margin-top:8px; padding:6px 12px; font-size:12px; background:#555; color:#fff;
+                  border:0; border-radius:4px; cursor:pointer; width:fit-content; }
+  .field button:hover { background:#333; }
+  
+  .action-btns { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; }
+  .btn { padding:8px 22px; font-size:14px; border:0; border-radius:4px; cursor:pointer; color:#fff; }
+  .btn-blue { background:#1a73e8; }
+  .btn-blue:hover { background:#1667cf; }
+  .btn-green { background:#2e9e44; }
+  .btn-green:hover { background:#248235; }
+  .btn.done { background:#555 !important; }
+
   #preview { background:#f5f5f5; padding:16px; overflow:auto; }
   ol.steps { margin:0; padding-left:20px; font-size:13px; line-height:2; }
 </style>
@@ -76,6 +84,7 @@
       <div class="field">
         <label>Logo 图片 URL</label>
         <input id="logoUrl" value="https://via.placeholder.com/150x60?text=HITI" placeholder="粘贴你公司Logo的图片链接">
+        <button id="btnDownloadLogo">⬇️ 下载此 Logo</button>
       </div>
     </div>
   </div>
@@ -83,14 +92,20 @@
   <!-- ===== 2. 实时预览 ===== -->
   <div class="panel">
     <h2>2. 实时预览</h2>
-    <div id="preview"></div>
+    <div class="action-btns">
+      <button id="btnCopyRich" class="btn btn-green">📋 一键复制签名（直接粘贴）</button>
+    </div>
+    <div id="preview" style="margin-top:12px; border:1px dashed #ccc; padding:16px; background:#fff;">
+    </div>
   </div>
 
   <!-- ===== 3. 复制代码 ===== -->
   <div class="panel">
-    <h2>3. 复制并粘贴到企业邮箱</h2>
-    <button id="btnCopy">复制 HTML 代码</button>
-    <ol class="steps">
+    <h2>3. 复制并粘贴到企业邮箱（高级）</h2>
+    <div class="action-btns">
+      <button id="btnCopy" class="btn btn-blue">复制 HTML 代码</button>
+    </div>
+    <ol class="steps" style="margin-top:12px;">
       <li>打开 PC 端企业邮箱，进入「邮件设置」→「写邮件」→「管理签名样式」</li>
       <li>点击「创建签名」→「更多」→「编辑 HTML 源码」</li>
       <li>粘贴复制的代码，然后选中签名中的占位图片，通过「插入图片」上传真实 logo</li>
@@ -109,37 +124,28 @@ function getData() {
   return d;
 }
 
-// ========== 生成签名 HTML 模板（完全按照图片一比一） ==========
+// ========== 生成签名 HTML 模板 ==========
 function buildSignature(d) {
-  // 处理邮箱和网址的链接（去掉空格，补全http）
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
 
+  // 核心修改：右侧单元格加了 width: 400px 和 word-break: break-word;
   return `
 <table cellpadding="0" cellspacing="0" border="0"
        style="font-family:Arial,'Microsoft YaHei',sans-serif;
               font-size:14px; color:#000000; line-height:1.6;">
   <tr>
-    <!-- 左侧：Logo -->
     <td style="padding-right:24px; vertical-align:top;">
       <img src="${d.logoUrl}" alt="HITI" width="150"
            style="display:block; border:0; max-width:150px;">
     </td>
-    
-    <!-- 右侧：文字信息，加左边框 -->
-    <td style="vertical-align:top; border-left:1px solid #000000; padding-left:24px;">
-      
-      <!-- 名字（深墨绿色，加粗） -->
+    <td style="vertical-align:top; border-left:1px solid #000000; padding-left:24px; width: 400px; word-break: break-word;">
       <div style="font-size:16px; font-weight:bold; color:#1a5f5a; margin-bottom:8px;">
         ${d.nameCn} ${d.nameEn}
       </div>
-      
-      <!-- 职位（加粗） -->
       <div style="font-weight:bold; margin-bottom:24px;">
         ${d.title}
       </div>
-      
-      <!-- 联系方式 -->
       <div style="margin-bottom:6px;">
         <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
       </div>
@@ -147,20 +153,13 @@ function buildSignature(d) {
         <span style="font-weight:bold;">Email :</span> 
         <a href="mailto:${emailLink}" style="color:#0000ee; text-decoration:underline;">${d.email}</a>
       </div>
-      
-      <!-- 公司信息 -->
       <div style="margin-bottom:2px;">${d.companyCn}</div>
       <div style="margin-bottom:24px;">${d.companyEn}</div>
-      
-      <!-- 地址 -->
       <div style="margin-bottom:2px;">${d.addrCn}</div>
       <div style="margin-bottom:24px;">${d.addrEn}</div>
-      
-      <!-- 网址 -->
       <div>
         <a href="${webLink}" style="color:#0000ee; text-decoration:underline;">${d.website}</a>
       </div>
-      
     </td>
   </tr>
 </table>`.trim();
@@ -171,15 +170,21 @@ function render() {
   document.getElementById('preview').innerHTML = buildSignature(getData());
 }
 
-// ========== 复制到剪贴板 ==========
-async function copySignature() {
+// ========== 按钮状态反馈 ==========
+function showBtnDone(btn, originalText) {
+  btn.textContent = '已复制 ✓';
+  btn.classList.add('done');
+  setTimeout(() => { btn.textContent = originalText; btn.classList.remove('done'); }, 2000);
+}
+
+// ========== 【按钮1】复制 HTML 代码 ==========
+async function copyHtmlCode() {
   const html = buildSignature(getData());
   const btn = document.getElementById('btnCopy');
+  const originalText = btn.textContent;
   try {
     await navigator.clipboard.writeText(html);
-    btn.textContent = '已复制 ✓';
-    btn.classList.add('done');
-    setTimeout(() => { btn.textContent = '复制 HTML 代码'; btn.classList.remove('done'); }, 2000);
+    showBtnDone(btn, originalText);
   } catch (e) {
     const ta = document.createElement('textarea');
     ta.value = html;
@@ -187,17 +192,67 @@ async function copySignature() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    btn.textContent = '已复制 ✓';
-    btn.classList.add('done');
-    setTimeout(() => { btn.textContent = '复制 HTML 代码'; btn.classList.remove('done'); }, 2000);
+    showBtnDone(btn, originalText);
   }
 }
+
+// ========== 【按钮2】一键复制富文本签名 ==========
+async function copyRichSignature() {
+  const previewDiv = document.getElementById('preview');
+  const btn = document.getElementById('btnCopyRich');
+  const originalText = btn.textContent;
+  
+  try {
+    const html = previewDiv.innerHTML;
+    const blob = new Blob([html], {type: 'text/html'});
+    const data = [new ClipboardItem({'text/html': blob})];
+    await navigator.clipboard.write(data);
+    showBtnDone(btn, originalText);
+  } catch (e) {
+    try {
+      const range = document.createRange();
+      range.selectNode(previewDiv);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      showBtnDone(btn, originalText);
+    } catch (err) {
+      alert('当前浏览器不支持一键复制，请手动选中预览区域的内容进行复制。');
+    }
+  }
+}
+
+// ========== 【按钮3】下载 Logo ==========
+document.getElementById('btnDownloadLogo').addEventListener('click', async () => {
+    const url = document.getElementById('logoUrl').value.trim();
+    if (!url) return alert('请先填写 Logo 图片 URL');
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('网络响应异常');
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = '公司Logo.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+        alert('当前浏览器安全策略限制了跨域图片直接下载。将为您在新标签页打开该图片，请右键选择“图片另存为”。');
+        window.open(url, '_blank');
+    }
+});
 
 // ========== 绑定事件 ==========
 document.querySelectorAll('.form input').forEach(el => {
   el.addEventListener('input', render);
 });
-document.getElementById('btnCopy').addEventListener('click', copySignature);
+document.getElementById('btnCopy').addEventListener('click', copyHtmlCode);
+document.getElementById('btnCopyRich').addEventListener('click', copyRichSignature);
 
 // 初始渲染
 render();
