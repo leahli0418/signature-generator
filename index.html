@@ -87,7 +87,7 @@
       </div>
       <div class="field">
         <label>Logo 图片 URL</label>
-        <input id="logoUrl" value="https://raw.githubusercontent.com/leahli0418/signature-generator/main/Vizitka_HITI_logo-01.png" placeholder="粘贴你公司Logo的图片链接">
+        <input id="logoUrl" value="https://raw.githubusercontent.com/leahli0418/signature-generator/main/HITI%20logo.png" placeholder="粘贴你公司Logo的图片链接">
         <button id="btnDownloadLogo">⬇️ 下载此 Logo</button>
       </div>
     </div>
@@ -134,23 +134,21 @@ function buildSignature(d) {
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
   const linkStyle = 'color:#1a5f5a; text-decoration:underline;';
 
-  // 【1】敬语字号改为 13px（与姓名一致）
-  // 【2】英文地址在 No. 168 后强制换行
+  // 英文地址在 No. 168 后强制换行
   const addrEnFormatted = d.addrEn.replace('No. 168 ', 'No. 168<br>');
 
   return `
-<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:10px; color:#000000; line-height:1.5; max-width: 480px;">
+<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:10px; color:#000000; line-height:1.5; max-width: 500px;">
   <div style="margin-bottom: 16px; font-size: 13px;">${d.greeting}</div>
   
-  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 480px;">
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 500px;">
     <tr>
-      <!-- 【5】Logo 宽度从 100px 改为 80px，使其高度与姓名区域接近；左侧 padding-right 缩小到 8px -->
-      <td style="padding-right:8px; vertical-align:top; width: 80px;">
-        <img src="${d.logoUrl}" alt="HITI" width="80"
-             style="display:block; border:0; max-width:80px;">
+      <!-- 【修改点】Logo 宽度从 80px 放大到 100px -->
+      <td style="padding-right:8px; vertical-align:top; width: 100px;">
+        <img src="${d.logoUrl}" alt="HITI" width="100"
+             style="display:block; border:0; max-width:100px;">
       </td>
       
-      <!-- 【4】右侧 padding-left 从 16px 缩小到 8px，文字更靠近中间竖线 -->
       <td style="vertical-align:top; border-left:1px solid #000000; padding-left:8px; width: 340px; word-break: break-word;">
         
         <div style="font-size:13px; font-weight:bold; color:#1a5f5a; margin-bottom: 4px;">
@@ -161,7 +159,6 @@ function buildSignature(d) {
           ${d.title}
         </div>
         
-        <!-- 【3】Mobile 和 Email 标签统一宽度 48px，冒号对齐 -->
         <div style="margin-bottom: 2px;">
           <span style="display:inline-block; width:48px; font-weight:bold;">Mobile :</span> ${d.mobile}
         </div>
@@ -258,7 +255,7 @@ document.getElementById('btnDownloadLogo').addEventListener('click', async () =>
 
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = 'Vizitka_HITI_logo-01.png';
+        a.download = 'HITI_logo.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
