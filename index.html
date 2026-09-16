@@ -15,13 +15,13 @@
   .form { display:flex; flex-wrap:wrap; gap:12px 20px; }
   .field { display:flex; flex-direction:column; gap:4px; }
   .field label { font-size:12px; color:#666; }
-  .field input { width:200px; padding:6px 8px; border:1px solid #ccc;
+  .field input { width:220px; padding:6px 8px; border:1px solid #ccc;
                  border-radius:4px; font-size:14px; box-sizing:border-box; }
   #btnCopy { padding:8px 22px; font-size:14px; background:#1a73e8; color:#fff;
              border:0; border-radius:4px; cursor:pointer; margin-top:12px; }
   #btnCopy:hover { background:#1667cf; }
   #btnCopy.done { background:#2e9e44; }
-  #preview { background:#f5f5f5; padding:12px; overflow:auto; }
+  #preview { background:#f5f5f5; padding:16px; overflow:auto; }
   ol.steps { margin:0; padding-left:20px; font-size:13px; line-height:2; }
 </style>
 </head>
@@ -29,53 +29,53 @@
 <div class="wrap">
   <h1>邮箱签名生成器</h1>
 
-  <!-- ===== 1. 填写信息（所有文字和字段均可自由调改） ===== -->
+  <!-- ===== 1. 填写信息 ===== -->
   <div class="panel">
     <h2>1. 填写信息</h2>
     <div class="form">
       <div class="field">
-        <label>中文名</label>
-        <input id="cnName" value="张三" placeholder="如：张三">
+        <label>姓名（中文）</label>
+        <input id="nameCn" value="李靓" placeholder="如：李靓">
       </div>
       <div class="field">
-        <label>英文名</label>
-        <input id="enName" value="Zhang San" placeholder="如：Zhang San">
+        <label>姓名（英文）</label>
+        <input id="nameEn" value="Leah Li" placeholder="如：Leah Li">
       </div>
       <div class="field">
-        <label>职位（中文）</label>
-        <input id="titleCn" value="算法工程师" placeholder="如：算法工程师">
-      </div>
-      <div class="field">
-        <label>职位（英文）</label>
-        <input id="titleEn" value="Algorithm Engineer" placeholder="如：Algorithm Engineer">
+        <label>职位</label>
+        <input id="title" value="执行总裁助理 Assistant to CEO" placeholder="如：执行总裁助理 Assistant to CEO">
       </div>
       <div class="field">
         <label>手机号</label>
-        <input id="mobile" value="+86 188 0000 0000" placeholder="如：+86 188 0000 0000">
+        <input id="mobile" value="+86 137 6465 6552" placeholder="如：+86 137 6465 6552">
       </div>
       <div class="field">
         <label>邮箱</label>
-        <input id="email" value="zhangsan@company.com" placeholder="如：zhangsan@company.com">
+        <input id="email" value="leah@dinengchuang.com" placeholder="如：leah@dinengchuang.com">
       </div>
       <div class="field">
         <label>公司中文名</label>
-        <input id="companyCn" value="示例科技有限公司" placeholder="如：示例科技有限公司">
+        <input id="companyCn" value="上海迪能创高新科技有限公司" placeholder="如：上海迪能创高新科技有限公司">
       </div>
       <div class="field">
         <label>公司英文名</label>
-        <input id="companyEn" value="Sample Technology Co., Ltd" placeholder="如：Sample Technology Co., Ltd">
+        <input id="companyEn" value="Shanghai Dineng Chuang High Tech Co., Ltd." placeholder="如：Shanghai Dineng Chuang High Tech Co., Ltd.">
       </div>
       <div class="field">
         <label>地址（中文）</label>
-        <input id="addrCn" value="上海市浦东新区某某路 100 号" placeholder="如：上海市浦东新区某某路 100 号">
+        <input id="addrCn" value="上海市浦东新区银城中路168号上海银行大厦24层2401室" placeholder="如：上海市浦东新区银城中路168号上海银行大厦24层2401室">
       </div>
       <div class="field">
         <label>地址（英文）</label>
-        <input id="addrEn" value="No.100, XX Road, Pudong, Shanghai" placeholder="如：No.100, XX Road, Pudong, Shanghai">
+        <input id="addrEn" value="24th Floor, Suite 2401, Shanghai Bank Tower, No. 168 Yincheng Middle Rd, Pudong New District, Shanghai, China" placeholder="如：24th Floor, Suite 2401, Shanghai Bank Tower...">
       </div>
       <div class="field">
-        <label>Logo 占位图片 URL</label>
-        <input id="logoUrl" value="https://via.placeholder.com/120x40?text=LOGO" placeholder="粘贴一个图片地址">
+        <label>网址</label>
+        <input id="website" value="www.hiti.ae" placeholder="如：www.hiti.ae">
+      </div>
+      <div class="field">
+        <label>Logo 图片 URL</label>
+        <input id="logoUrl" value="https://via.placeholder.com/150x60?text=HITI" placeholder="粘贴你公司Logo的图片链接">
       </div>
     </div>
   </div>
@@ -96,56 +96,71 @@
       <li>粘贴复制的代码，然后选中签名中的占位图片，通过「插入图片」上传真实 logo</li>
       <li>保存并设为使用中的签名</li>
     </ol>
-    <p style="font-size:12px; color:#999;">提示：粘贴后若编辑器把签名显示为居中，在编辑器内全选并点击「左对齐」即可。</p>
   </div>
 </div>
 
 <script>
 // ========== 读取所有表单字段 ==========
 function getData() {
-  const ids = ['cnName','enName','titleCn','titleEn','mobile',
-               'email','companyCn','companyEn','addrCn','addrEn','logoUrl'];
+  const ids = ['nameCn','nameEn','title','mobile','email',
+               'companyCn','companyEn','addrCn','addrEn','website','logoUrl'];
   const d = {};
   ids.forEach(id => d[id] = document.getElementById(id).value.trim());
   return d;
 }
 
-// ========== 生成签名 HTML 模板 ==========
-// 所有文字内容都在这里定义，直接修改即可调改格式与内容
+// ========== 生成签名 HTML 模板（完全按照图片一比一） ==========
 function buildSignature(d) {
+  // 处理邮箱和网址的链接（去掉空格，补全http）
+  const emailLink = d.email.replace(/\s/g,'');
+  const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
+
   return `
 <table cellpadding="0" cellspacing="0" border="0"
        style="font-family:Arial,'Microsoft YaHei',sans-serif;
-              font-size:13px; color:#333; line-height:1.6; max-width:520px;">
+              font-size:14px; color:#000000; line-height:1.6;">
   <tr>
-    <td style="padding-right:16px; vertical-align:top;">
-      <img src="${d.logoUrl}" alt="LOGO" width="120"
-           style="display:block; border:0; max-width:120px;">
+    <!-- 左侧：Logo -->
+    <td style="padding-right:24px; vertical-align:top;">
+      <img src="${d.logoUrl}" alt="HITI" width="150"
+           style="display:block; border:0; max-width:150px;">
     </td>
-    <td style="vertical-align:top; border-left:1px solid #ddd; padding-left:16px;">
-      <div style="font-size:15px; font-weight:bold; color:#1a1a1a;">
-        ${d.cnName} <span style="font-weight:normal; color:#555;">${d.enName}</span>
+    
+    <!-- 右侧：文字信息，加左边框 -->
+    <td style="vertical-align:top; border-left:1px solid #000000; padding-left:24px;">
+      
+      <!-- 名字（深墨绿色，加粗） -->
+      <div style="font-size:16px; font-weight:bold; color:#1a5f5a; margin-bottom:8px;">
+        ${d.nameCn} ${d.nameEn}
       </div>
-      <div style="color:#666; margin-bottom:6px;">
-        ${d.titleCn} / ${d.titleEn}
+      
+      <!-- 职位（加粗） -->
+      <div style="font-weight:bold; margin-bottom:24px;">
+        ${d.title}
       </div>
-      <div style="margin-bottom:2px;">
-        <span style="color:#888;">Mobile：</span>
-        <a href="tel:${d.mobile.replace(/\s/g,'')}" style="color:#1a73e8; text-decoration:none;">${d.mobile}</a>
+      
+      <!-- 联系方式 -->
+      <div style="margin-bottom:6px;">
+        <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
       </div>
-      <div style="margin-bottom:2px;">
-        <span style="color:#888;">Email：</span>
-        <a href="mailto:${d.email}" style="color:#1a73e8; text-decoration:none;">${d.email}</a>
+      <div style="margin-bottom:24px;">
+        <span style="font-weight:bold;">Email :</span> 
+        <a href="mailto:${emailLink}" style="color:#0000ee; text-decoration:underline;">${d.email}</a>
       </div>
-      <div style="margin-top:8px; font-weight:bold; color:#1a1a1a;">
-        ${d.companyCn}
+      
+      <!-- 公司信息 -->
+      <div style="margin-bottom:2px;">${d.companyCn}</div>
+      <div style="margin-bottom:24px;">${d.companyEn}</div>
+      
+      <!-- 地址 -->
+      <div style="margin-bottom:2px;">${d.addrCn}</div>
+      <div style="margin-bottom:24px;">${d.addrEn}</div>
+      
+      <!-- 网址 -->
+      <div>
+        <a href="${webLink}" style="color:#0000ee; text-decoration:underline;">${d.website}</a>
       </div>
-      <div style="color:#666; font-size:12px;">
-        ${d.companyEn}
-      </div>
-      <div style="color:#888; font-size:12px; margin-top:2px;">
-        ${d.addrCn}<br>${d.addrEn}
-      </div>
+      
     </td>
   </tr>
 </table>`.trim();
@@ -166,7 +181,6 @@ async function copySignature() {
     btn.classList.add('done');
     setTimeout(() => { btn.textContent = '复制 HTML 代码'; btn.classList.remove('done'); }, 2000);
   } catch (e) {
-    // 降级方案：兼容不支持 clipboard API 的浏览器
     const ta = document.createElement('textarea');
     ta.value = html;
     document.body.appendChild(ta);
