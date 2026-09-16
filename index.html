@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邮箱签名生成器</title>
+<style>
+  body { margin:0; padding:24px; background:#f5f5f5;
+         font-family:"Microsoft YaHei",Arial,sans-serif; color:#333; }
+  .wrap { max-width:900px; margin:0 auto; }
+  h1 { font-size:20px; margin:0 0 16px; }
+  .panel { background:#fff; border-radius:8px; padding:16px 20px;
+           margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .panel h2 { font-size:15px; margin:0 0 12px; }
+  .form { display:flex; flex-wrap:wrap; gap:12px 20px; }
+  .field { display:flex; flex-direction:column; gap:4px; }
+  .field label { font-size:12px; color:#666; }
+  .field input { width:200px; padding:6px 8px; border:1px solid #ccc;
+                 border-radius:4px; font-size:14px; box-sizing:border-box; }
+  #btnCopy { padding:8px 22px; font-size:14px; background:#1a73e8; color:#fff;
+             border:0; border-radius:4px; cursor:pointer; margin-top:12px; }
+  #btnCopy:hover { background:#1667cf; }
+  #btnCopy.done { background:#2e9e44; }
+  #preview { background:#f5f5f5; padding:12px; overflow:auto; }
+  ol.steps { margin:0; padding-left:20px; font-size:13px; line-height:2; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>邮箱签名生成器</h1>
+
+  <!-- ===== 1. 填写信息（所有文字和字段均可自由调改） ===== -->
+  <div class="panel">
+    <h2>1. 填写信息</h2>
+    <div class="form">
+      <div class="field">
+        <label>中文名</label>
+        <input id="cnName" value="张三" placeholder="如：张三">
+      </div>
+      <div class="field">
+        <label>英文名</label>
+        <input id="enName" value="Zhang San" placeholder="如：Zhang San">
+      </div>
+      <div class="field">
+        <label>职位（中文）</label>
+        <input id="titleCn" value="算法工程师" placeholder="如：算法工程师">
+      </div>
+      <div class="field">
+        <label>职位（英文）</label>
+        <input id="titleEn" value="Algorithm Engineer" placeholder="如：Algorithm Engineer">
+      </div>
+      <div class="field">
+        <label>手机号</label>
+        <input id="mobile" value="+86 188 0000 0000" placeholder="如：+86 188 0000 0000">
+      </div>
+      <div class="field">
+        <label>邮箱</label>
+        <input id="email" value="zhangsan@company.com" placeholder="如：zhangsan@company.com">
+      </div>
+      <div class="field">
+        <label>公司中文名</label>
+        <input id="companyCn" value="示例科技有限公司" placeholder="如：示例科技有限公司">
+      </div>
+      <div class="field">
+        <label>公司英文名</label>
+        <input id="companyEn" value="Sample Technology Co., Ltd" placeholder="如：Sample Technology Co., Ltd">
+      </div>
+      <div class="field">
+        <label>地址（中文）</label>
+        <input id="addrCn" value="上海市浦东新区某某路 100 号" placeholder="如：上海市浦东新区某某路 100 号">
+      </div>
+      <div class="field">
+        <label>地址（英文）</label>
+        <input id="addrEn" value="No.100, XX Road, Pudong, Shanghai" placeholder="如：No.100, XX Road, Pudong, Shanghai">
+      </div>
+      <div class="field">
+        <label>Logo 占位图片 URL</label>
+        <input id="logoUrl" value="https://via.placeholder.com/120x40?text=LOGO" placeholder="粘贴一个图片地址">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. 实时预览 ===== -->
+  <div class="panel">
+    <h2>2. 实时预览</h2>
+    <div id="preview"></div>
+  </div>
+
+  <!-- ===== 3. 复制代码 ===== -->
+  <div class="panel">
+    <h2>3. 复制并粘贴到企业邮箱</h2>
+    <button id="btnCopy">复制 HTML 代码</button>
+    <ol class="steps">
+      <li>打开 PC 端企业邮箱，进入「邮件设置」→「写邮件」→「管理签名样式」</li>
+      <li>点击「创建签名」→「更多」→「编辑 HTML 源码」</li>
+      <li>粘贴复制的代码，然后选中签名中的占位图片，通过「插入图片」上传真实 logo</li>
+      <li>保存并设为使用中的签名</li>
+    </ol>
+    <p style="font-size:12px; color:#999;">提示：粘贴后若编辑器把签名显示为居中，在编辑器内全选并点击「左对齐」即可。</p>
+  </div>
+</div>
+
+<script>
+// ========== 读取所有表单字段 ==========
+function getData() {
+  const ids = ['cnName','enName','titleCn','titleEn','mobile',
+               'email','companyCn','companyEn','addrCn','addrEn','logoUrl'];
+  const d = {};
+  ids.forEach(id => d[id] = document.getElementById(id).value.trim());
+  return d;
+}
+
+// ========== 生成签名 HTML 模板 ==========
+// 所有文字内容都在这里定义，直接修改即可调改格式与内容
+function buildSignature(d) {
+  return `
+<table cellpadding="0" cellspacing="0" border="0"
+       style="font-family:Arial,'Microsoft YaHei',sans-serif;
+              font-size:13px; color:#333; line-height:1.6; max-width:520px;">
+  <tr>
+    <td style="padding-right:16px; vertical-align:top;">
+      <img src="${d.logoUrl}" alt="LOGO" width="120"
+           style="display:block; border:0; max-width:120px;">
+    </td>
+    <td style="vertical-align:top; border-left:1px solid #ddd; padding-left:16px;">
+      <div style="font-size:15px; font-weight:bold; color:#1a1a1a;">
+        ${d.cnName} <span style="font-weight:normal; color:#555;">${d.enName}</span>
+      </div>
+      <div style="color:#666; margin-bottom:6px;">
+        ${d.titleCn} / ${d.titleEn}
+      </div>
+      <div style="margin-bottom:2px;">
+        <span style="color:#888;">Mobile：</span>
+        <a href="tel:${d.mobile.replace(/\s/g,'')}" style="color:#1a73e8; text-decoration:none;">${d.mobile}</a>
+      </div>
+      <div style="margin-bottom:2px;">
+        <span style="color:#888;">Email：</span>
+        <a href="mailto:${d.email}" style="color:#1a73e8; text-decoration:none;">${d.email}</a>
+      </div>
+      <div style="margin-top:8px; font-weight:bold; color:#1a1a1a;">
+        ${d.companyCn}
+      </div>
+      <div style="color:#666; font-size:12px;">
+        ${d.companyEn}
+      </div>
+      <div style="color:#888; font-size:12px; margin-top:2px;">
+        ${d.addrCn}<br>${d.addrEn}
+      </div>
+    </td>
+  </tr>
+</table>`.trim();
+}
+
+// ========== 渲染预览 ==========
+function render() {
+  document.getElementById('preview').innerHTML = buildSignature(getData());
+}
+
+// ========== 复制到剪贴板 ==========
+async function copySignature() {
+  const html = buildSignature(getData());
+  const btn = document.getElementById('btnCopy');
+  try {
+    await navigator.clipboard.writeText(html);
+    btn.textContent = '已复制 ✓';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '复制 HTML 代码'; btn.classList.remove('done'); }, 2000);
+  } catch (e) {
+    // 降级方案：兼容不支持 clipboard API 的浏览器
+    const ta = document.createElement('textarea');
+    ta.value = html;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '已复制 ✓';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '复制 HTML 代码'; btn.classList.remove('done'); }, 2000);
+  }
+}
+
+// ========== 绑定事件 ==========
+document.querySelectorAll('.form input').forEach(el => {
+  el.addEventListener('input', render);
+});
+document.getElementById('btnCopy').addEventListener('click', copySignature);
+
+// 初始渲染
+render();
+</script>
+</body>
+</html>
