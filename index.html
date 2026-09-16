@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DNC邮箱签名生成器</title>
+<title>邮箱签名生成器</title>
 <style>
   body { margin:0; padding:24px; background:#f5f5f5;
          font-family:"Microsoft YaHei",Arial,sans-serif; color:#333; }
@@ -41,6 +41,10 @@
   <div class="panel">
     <h2>1. 填写信息</h2>
     <div class="form">
+      <div class="field">
+        <label>称呼（可选）</label>
+        <input id="greeting" value="Best Regards," placeholder="如：Best Regards,">
+      </div>
       <div class="field">
         <label>姓名（中文）</label>
         <input id="nameCn" value="李靓" placeholder="如：李靓">
@@ -83,7 +87,6 @@
       </div>
       <div class="field">
         <label>Logo 图片 URL</label>
-        <!-- ⚠️ 这里已经替换成了你提供的真实链接 -->
         <input id="logoUrl" value="https://raw.githubusercontent.com/leahli0418/signature-generator/main/Vizitka_HITI_logo-01.png" placeholder="粘贴你公司Logo的图片链接">
         <button id="btnDownloadLogo">⬇️ 下载此 Logo</button>
       </div>
@@ -118,51 +121,64 @@
 <script>
 // ========== 读取所有表单字段 ==========
 function getData() {
-  const ids = ['nameCn','nameEn','title','mobile','email',
+  const ids = ['greeting','nameCn','nameEn','title','mobile','email',
                'companyCn','companyEn','addrCn','addrEn','website','logoUrl'];
   const d = {};
   ids.forEach(id => d[id] = document.getElementById(id).value.trim());
   return d;
 }
 
-// ========== 生成签名 HTML 模板 ==========
+// ========== 生成签名 HTML 模板（全新紧凑版） ==========
 function buildSignature(d) {
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
 
+  // 注意：外层整体加了 max-width: 450px，字号缩小到 12px
   return `
-<table cellpadding="0" cellspacing="0" border="0"
-       style="font-family:Arial,'Microsoft YaHei',sans-serif;
-              font-size:14px; color:#000000; line-height:1.6;">
-  <tr>
-    <td style="padding-right:24px; vertical-align:top;">
-      <img src="${d.logoUrl}" alt="HITI" width="150"
-           style="display:block; border:0; max-width:150px;">
-    </td>
-    <td style="vertical-align:top; border-left:1px solid #000000; padding-left:24px; width: 400px; word-break: break-word;">
-      <div style="font-size:16px; font-weight:bold; color:#1a5f5a; margin-bottom:8px;">
-        ${d.nameCn} ${d.nameEn}
-      </div>
-      <div style="font-weight:bold; margin-bottom:24px;">
-        ${d.title}
-      </div>
-      <div style="margin-bottom:6px;">
-        <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
-      </div>
-      <div style="margin-bottom:24px;">
-        <span style="font-weight:bold;">Email :</span> 
-        <a href="mailto:${emailLink}" style="color:#0000ee; text-decoration:underline;">${d.email}</a>
-      </div>
-      <div style="margin-bottom:2px;">${d.companyCn}</div>
-      <div style="margin-bottom:24px;">${d.companyEn}</div>
-      <div style="margin-bottom:2px;">${d.addrCn}</div>
-      <div style="margin-bottom:24px;">${d.addrEn}</div>
-      <div>
-        <a href="${webLink}" style="color:#0000ee; text-decoration:underline;">${d.website}</a>
-      </div>
-    </td>
-  </tr>
-</table>`.trim();
+<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:12px; color:#000000; line-height:1.4; max-width: 450px;">
+  <div style="margin-bottom: 8px;">${d.greeting}</div>
+  
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 450px;">
+    <tr>
+      <!-- 左侧 Logo 缩小到 100px -->
+      <td style="padding-right:16px; vertical-align:top; width: 100px;">
+        <img src="${d.logoUrl}" alt="HITI" width="100"
+             style="display:block; border:0; max-width:100px;">
+      </td>
+      
+      <!-- 右侧文字，限制宽度，强制换行 -->
+      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:16px; width: 320px; word-break: break-word;">
+        
+        <div style="font-size:13px; font-weight:bold; color:#1a5f5a; margin-bottom:4px;">
+          ${d.nameCn} ${d.nameEn}
+        </div>
+        
+        <div style="font-weight:bold; margin-bottom:12px;">
+          ${d.title}
+        </div>
+        
+        <div style="margin-bottom:2px;">
+          <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
+        </div>
+        <div style="margin-bottom:12px;">
+          <span style="font-weight:bold;">Email :</span> 
+          <a href="mailto:${emailLink}" style="color:#0000ee; text-decoration:underline;">${d.email}</a>
+        </div>
+        
+        <div style="margin-bottom:1px;">${d.companyCn}</div>
+        <div style="margin-bottom:12px;">${d.companyEn}</div>
+        
+        <div style="margin-bottom:1px;">${d.addrCn}</div>
+        <div style="margin-bottom:12px;">${d.addrEn}</div>
+        
+        <div>
+          <a href="${webLink}" style="color:#0000ee; text-decoration:underline;">${d.website}</a>
+        </div>
+        
+      </td>
+    </tr>
+  </table>
+</div>`.trim();
 }
 
 // ========== 渲染预览 ==========
