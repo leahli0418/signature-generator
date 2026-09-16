@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>邮箱签名生成器</title>
+<title>DNC邮箱签名生成器</title>
 <style>
   body { margin:0; padding:24px; background:#f5f5f5;
          font-family:"Microsoft YaHei",Arial,sans-serif; color:#333; }
@@ -128,48 +128,48 @@ function getData() {
   return d;
 }
 
-// ========== 生成签名 HTML 模板（全新紧凑版） ==========
+// ========== 生成签名 HTML 模板（极简紧凑版） ==========
 function buildSignature(d) {
   const emailLink = d.email.replace(/\s/g,'');
   const webLink = d.website.startsWith('http') ? d.website : 'http://' + d.website;
 
-  // 注意：外层整体加了 max-width: 450px，字号缩小到 12px
+  // 强制缩小字号，收紧间距
   return `
-<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:12px; color:#000000; line-height:1.4; max-width: 450px;">
-  <div style="margin-bottom: 8px;">${d.greeting}</div>
+<div style="font-family:Arial,'Microsoft YaHei',sans-serif; font-size:11px; color:#000000; line-height:1.3; max-width: 420px;">
+  <div style="margin-bottom: 6px; font-size: 11px;">${d.greeting}</div>
   
-  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 450px;">
+  <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 420px;">
     <tr>
-      <!-- 左侧 Logo 缩小到 100px -->
-      <td style="padding-right:16px; vertical-align:top; width: 100px;">
-        <img src="${d.logoUrl}" alt="HITI" width="100"
-             style="display:block; border:0; max-width:100px;">
+      <!-- Logo 缩小到 90px -->
+      <td style="padding-right:12px; vertical-align:top; width: 90px;">
+        <img src="${d.logoUrl}" alt="HITI" width="90"
+             style="display:block; border:0; max-width:90px;">
       </td>
       
-      <!-- 右侧文字，限制宽度，强制换行 -->
-      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:16px; width: 320px; word-break: break-word;">
+      <!-- 右侧信息，宽度锁死在 300px，强制换行 -->
+      <td style="vertical-align:top; border-left:1px solid #000000; padding-left:12px; width: 300px; word-break: break-word;">
         
-        <div style="font-size:13px; font-weight:bold; color:#1a5f5a; margin-bottom:4px;">
+        <div style="font-size:12px; font-weight:bold; color:#1a5f5a; margin-bottom:2px;">
           ${d.nameCn} ${d.nameEn}
         </div>
         
-        <div style="font-weight:bold; margin-bottom:12px;">
+        <div style="font-weight:bold; margin-bottom:10px; font-size:11px;">
           ${d.title}
         </div>
         
         <div style="margin-bottom:2px;">
           <span style="font-weight:bold;">Mobile :</span> ${d.mobile}
         </div>
-        <div style="margin-bottom:12px;">
+        <div style="margin-bottom:10px;">
           <span style="font-weight:bold;">Email :</span> 
           <a href="mailto:${emailLink}" style="color:#0000ee; text-decoration:underline;">${d.email}</a>
         </div>
         
         <div style="margin-bottom:1px;">${d.companyCn}</div>
-        <div style="margin-bottom:12px;">${d.companyEn}</div>
+        <div style="margin-bottom:10px;">${d.companyEn}</div>
         
         <div style="margin-bottom:1px;">${d.addrCn}</div>
-        <div style="margin-bottom:12px;">${d.addrEn}</div>
+        <div style="margin-bottom:10px;">${d.addrEn}</div>
         
         <div>
           <a href="${webLink}" style="color:#0000ee; text-decoration:underline;">${d.website}</a>
